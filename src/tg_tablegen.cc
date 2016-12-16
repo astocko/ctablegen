@@ -115,6 +115,31 @@ TGRecordRef TGRecordMapGetFirst(TGRecordMapRef rm_ref) {
   return AS_TYPE(TGRecordRef, rm->begin()->second.get());
 }
 
+TGRecordRef TGRecordMapGet(TGRecordMapRef rm_ref, const char* name) {
+  CHECK_REF(rm_ref, nullptr);
+  auto rm = AS_TYPE(RecordMap *, rm_ref);
+  auto val = rm->find(name);
+  if (val != rm->end()) {
+    return AS_TYPE(TGRecordRef, rm->find(name)->second.get());
+  }
+  return nullptr;
+}
+
+const char** TGRecordMapGetKeys(TGRecordMapRef rm_ref, size_t *len) {
+  CHECK_REF(rm_ref, nullptr);
+  auto rm = AS_TYPE(RecordMap *, rm_ref);
+  auto sz = rm->size();
+  auto str_array = new const char*[sz];
+  *len = sz;
+  size_t idx = 0;
+
+  for (auto &i : *rm) {
+    str_array[idx++] = i.first.c_str();
+  }
+
+  return str_array;
+}
+
 // LLVM Record
 TGRecordKeeperRef TGRecordGetRecords(TGRecordRef record_ref) {
   CHECK_REF(record_ref, nullptr);
@@ -216,7 +241,7 @@ int8_t* TGRecordValGetValAsBits(TGRecordValRef rv_ref, size_t *len) {
 TGBool TGRecordValGetValAsInt(TGRecordValRef rv_ref, int64_t* integer) {
   CHECK_REF(rv_ref, TGInvalidRecTyKind);
   auto rv = AS_TYPE(RecordVal*, rv_ref);
-  if (rv->getType()->getRecTyKind() == RecTy::BitsRecTyKind) {
+  if (rv->getType()->getRecTyKind() == RecTy::IntRecTyKind) {
     *integer = reinterpret_cast<IntInit*>(rv->getValue())->getValue();
     return true;
   }
@@ -260,8 +285,12 @@ void TGBitArrayFree(int8_t bit_array[]) {
   delete [] bit_array;
 }
 
-void TGStringFree(char *str) {
+void TGStringFree(const char *str) {
   delete str;
+}
+
+void TGStringArrayFree(const char **str_array) {
+  delete str_array;
 }
 
 void TGRecordValItrFree(TGRecordValItrRef rvi_ref) {

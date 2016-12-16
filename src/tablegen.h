@@ -41,6 +41,8 @@ extern "C" {
 
   // LLVM RecordMap
   TGRecordRef TGRecordMapGetFirst(TGRecordMapRef rm_ref);
+  TGRecordRef TGRecordMapGet(TGRecordMapRef rm_ref, const char* name);
+  const char** TGRecordMapGetKeys(TGRecordMapRef rm_ref, size_t *len);
 
   // LLVM Record
   TGRecordKeeperRef TGRecordGetRecords(TGRecordRef record_ref);
@@ -68,7 +70,8 @@ extern "C" {
 
   // Memory
   void TGBitArrayFree(int8_t bit_array[]);
-  void TGStringFree(char* str);
+  void TGStringFree(const char* str);
+  void TGStringArrayFree(const char **str_array);
   void TGRecordValItrFree(TGRecordValItrRef rvi_ref);
 
 
