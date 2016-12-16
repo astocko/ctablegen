@@ -11,9 +11,20 @@
 #include <llvm/TableGen/Error.h>
 #include <llvm/TableGen/Record.h>
 
+#include "TableGen.h"
+
+#define CHECK_REF(ref, val)                                                    \
+  if (!ref)                                                                    \
+  return val
+#define AS_TYPE(Type, Obj) reinterpret_cast<Type>(Obj)
+#define AS_CTYPE(Type, Obj) reinterpret_cast<const Type>(Obj)
+#define CONST_REF(Type, Obj) const_cast<Type>(static_cast<const Type>(Obj))
+
 using namespace llvm;
 
 namespace ctablegen {
+
+typedef std::map<std::string, std::unique_ptr<Record>> RecordMap;
 
 class TableGen {
 public:
@@ -28,22 +39,17 @@ private:
   std::unique_ptr<SourceMgr> source_mgr_;
 };
 
-template <class T> class ArrayRefIterator {
-public:
-  explicit ArrayRefIterator(ArrayRef<T> a) : array_(a), idx_(0), len_(a.size()) {}
-  const T *Next() {
-    if (idx_ < len_) {
-      return &array_[idx_++];
-    } else {
-      return nullptr;
-    }
-  }
+  // Utility
+  TGRecTyKind TGFromRecType(RecTy *rt);
 
-private:
-  ArrayRef<T> array_;
-  size_t idx_;
-  const size_t len_;
-};
+  // TGRecTyKind TGInitRecType(Init *ti);
+  // TGBool TGBitInitGetValue(Init *ti, int8_t *bit);
+  // int8_t *TGBitsInitGetValue(Init *ti, size_t *len);
+  // TGBool TGIntInitGetValue(Init *ti, int64_t *integer);
+  // char *TGStringInitGetValueNewString(Init *ti);
+  // TGRecordRef TGRecordInitGetValue(Init *ti);
+
+
 }
 
 #endif

@@ -9,7 +9,7 @@
 #include <utility>
 
 extern "C" {
-#include "../src/tablegen.h"
+#include "../src/TableGen.h"
 }
 
 std::pair<std::string, std::vector<std::string>> GetTestConfig() {
@@ -66,6 +66,10 @@ TEST_CASE("Create TableGen", "[create]") {
     REQUIRE(itr);
     TGRecordValRef rv;
 
+    TGListItrRef list_itr;
+    TGDagItrRef dag_itr;
+    TGTypedInitRef init_ref;
+
     int8_t bit;
     int8_t *bits;
     int64_t integer;
@@ -73,11 +77,14 @@ TEST_CASE("Create TableGen", "[create]") {
     size_t len;
     TGBool ret;
 
+    //    std::cout << "RECORD: " << TGRecordGetName(record) << std::endl;
+
     while (rv = TGRecordValItrNext(itr)) {
       auto name = TGRecordValGetName(rv);
       auto type = TGRecordValGetType(rv);
       REQUIRE(name);
       REQUIRE((type >= 0 && type <= 7));
+
 
       switch(type) {
       case TGInvalidRecTyKind:
@@ -85,7 +92,7 @@ TEST_CASE("Create TableGen", "[create]") {
         break;
       case TGBitRecTyKind:
         ret = TGRecordValGetValAsBit(rv, &bit);
-        REQUIRE(ret);
+        REQUIRE((ret == -1 || ret == 0 || ret == 1));
         REQUIRE((bit == 0 || bit == 1));
         break;
       case TGBitsRecTyKind:
@@ -94,7 +101,7 @@ TEST_CASE("Create TableGen", "[create]") {
         TGBitArrayFree(bits);
         break;
       case TGCodeRecTyKind:
-        str = TGRecordValGetValAsString(rv);
+        str = TGRecordValGetValAsNewString(rv);
         REQUIRE(str);
         REQUIRE_NOTHROW(TGStringFree(str));
         break;
@@ -103,12 +110,34 @@ TEST_CASE("Create TableGen", "[create]") {
         REQUIRE(ret);
         break;
       case TGStringRecTyKind:
-        str = TGRecordValGetValAsString(rv);
+        str = TGRecordValGetValAsNewString(rv);
         REQUIRE(str);
         REQUIRE_NOTHROW(TGStringFree(str));
         break;
+      case TGListRecTyKind:
+        list_itr = TGListRecordGetValues(rv);
+        if (!list_itr) break;
+        while (init_ref = TGListItrNext(list_itr)) {
+          if (TGInitRecType(init_ref) == TGRecordRecTyKind) {
+            std::cout << TGRecordGetName(TGRecordInitGetValue(init_ref)) << ", ";
+          }
+        }
+        TGListItrFree(list_itr);
+        std::cout << std::endl << "---------" << std::endl;
+      case TGDagRecTyKind:
+        dag_itr = TGDagRecordGetValues(rv);
+        if (!dag_itr) break;
+        // while (init_ref = TGDagItrNext(dag_itr)) {
+        //   std:: cout << "DAG et: " << TGInitRecType(init_ref) << ", ";
+        //   if (TGInitRecType(init_ref) == TGRecordRecTyKind) {
+        //     std::cout << TGRecordGetName(TGRecordInitGetValue(init_ref)) << " :: ";
+        //   }
+        // }
+        // std::cout << std::endl << "---" << std::endl;
+        if (dag_itr) TGDagItrFree(dag_itr);
+        break;
       default:
-        str = TGRecordValGetValAsString(rv);
+        str = TGRecordValGetValAsNewString(rv);
         REQUIRE(str);
         REQUIRE_NOTHROW(TGStringFree(str));
         break;
