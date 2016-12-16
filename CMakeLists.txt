@@ -24,6 +24,7 @@ llvm_config(LLVM_INCLUDE_DIRS "--includedir")
 llvm_config(LLVM_LIB_DIR "--link-static;--libdir")
 llvm_config(LLVM_CPP_FLAGS "--link-static;--cppflags")
 llvm_config(LLVM_CXX_FLAGS "--link-static;--cxxflags")
+llvm_config(LLVM_SYS_LIBS "--link-static;--system-libs")
 
 # Get correct sources for specified LLVM version
 file(TO_CMAKE_PATH "${CMAKE_SOURCE_DIR}/third-party/llvm-${LLVM_VER}/lib" TG_INCLUDE_DIR)
@@ -32,3 +33,7 @@ set(TG_CPP_FILES Error.cpp Record.cpp SetTheory.cpp StringMatcher.cpp TGLexer.cp
 prepend_dir(TG_SOURCES "${TG_SOURCE_DIR}" "${TG_CPP_FILES}")
 
 add_subdirectory(src)
+add_subdirectory(test)
+
+enable_testing()
+add_test(NAME CTableGenTest COMMAND tblgentest WORKING_DIRECTORY ${PROJECT_BINARY_DIR})

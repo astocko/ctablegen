@@ -13,3 +13,4 @@ build
 
 # Other
 compile_commands.json
+compile.sh

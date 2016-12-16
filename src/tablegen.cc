@@ -1,11 +1,6 @@
-#include <iostream>
-#include <cstdio>
-#include "TableGenWrapper.h"
-
-using namespace llvm;
 
 
-TableGen* tablegen_new(const char* input, size_t includesc, const char* includesv[]) {
+tg_parser_t* tablegen_new(const char* input, size_t includesc, const char* includesv[]) {
   auto rk = new RecordKeeper;
   auto sm = new SourceMgr;
 

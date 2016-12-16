@@ -6,7 +6,7 @@ add_definitions(${LLVM_CPP_FLAGS})
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${LLVM_CXX_FLAGS}")
 
 # Create library
-add_library(ctablegen STATIC ${TG_SOURCES} TableGenWrapper.cc)
+add_library(ctablegen ${TG_SOURCES} tg_tablegen.cc)
 
 set(LLVM_LIB_DIR_CFG "${PROJECT_BINARY_DIR}/llvm_lib_dir.cfg")
 
