@@ -11,3 +11,6 @@ cmake -DLLVM_CONFIG_BIN=llvm-config-3.9 ..
 
 # Generate Compile Commands (compile_commands.json)
 cmake -DLLVM_CONFIG_BIN=llvm-config-3.9 -DCMAKE_EXPORT_COMPILE_COMMANDS=1 ..
+
+# LICENSE
+
