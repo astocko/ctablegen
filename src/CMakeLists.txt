@@ -10,7 +10,8 @@ add_library(ctablegen ${TG_SOURCES} Utility.cc RecordVal.cc Record.cc RecordMap.
 
 set(LLVM_LIB_DIR_CFG "${PROJECT_BINARY_DIR}/llvm_lib_dir.cfg")
 
-file(WRITE ${LLVM_LIB_DIR_CFG} "${LLVM_LIB_DIR}")
+file(WRITE ${LLVM_LIB_DIR_CFG} "${LLVM_LIB_DIR}\n")
+file(APPEND ${LLVM_LIB_DIR_CFG} "${LLVM_SYS_LIBS}")
 
 # Install
 install(TARGETS ctablegen DESTINATION ${CMAKE_INSTALL_PREFIX})
