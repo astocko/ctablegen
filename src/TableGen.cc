@@ -120,6 +120,23 @@ TGTypedInitRef TGDagItrNext(TGDagItrRef di_ref) {
   return AS_TYPE(TGTypedInitRef, ti);
 }
 
+TGDagPairRef TGDagItrNextPair(TGDagItrRef di_ref) {
+  CHECK_REF(di_ref, nullptr);
+  auto dp = AS_TYPE(ctablegen::DagRefIterator*, di_ref)->NextPair();
+  return AS_TYPE(TGDagPairRef, dp);
+}
+
+char *TGDagPairGetKey(TGDagPairRef dp_ref) {
+  CHECK_REF(dp_ref, nullptr);
+  auto dp = AS_TYPE(ctablegen::DagPair*, dp_ref);
+  return const_cast<char*>(dp->first.c_str());
+}
+
+TGTypedInitRef TGDagPairGetValue(TGDagPairRef dp_ref) {
+  CHECK_REF(dp_ref, nullptr);
+  auto dp = AS_TYPE(ctablegen::DagPair*, dp_ref);
+  return AS_TYPE(TGTypedInitRef, dp->second);
+}
 
 // Memory
 void TGBitArrayFree(int8_t bit_array[]) {
@@ -147,4 +164,9 @@ void TGListItrFree(TGListItrRef li_ref) {
 void TGDagItrFree(TGDagItrRef di_ref) {
   CHECK_REF(di_ref, );
   delete AS_TYPE(ctablegen::DagRefIterator*, di_ref);
+}
+
+void TGDagPairFree(TGDagPairRef dp_ref) {
+  CHECK_REF(dp_ref, );
+  delete AS_TYPE(ctablegen::DagPair*, dp_ref);
 }

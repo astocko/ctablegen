@@ -75,6 +75,9 @@ TGTypedInitRef TGListItrNext(TGListItrRef li_ref);
 // LLVM DagType
 TGDagItrRef TGDagRecordGetValues(TGRecordValRef rv_ref);
 TGTypedInitRef TGDagItrNext(TGDagItrRef di_ref);
+TGDagPairRef TGDagItrNextPair(TGDagItrRef di_ref);
+char *TGDagPairGetKey(TGDagPairRef dp_ref);
+TGTypedInitRef TGDagPairGetValue(TGDagPairRef dp_ref);
 
 // Utility
 TGRecTyKind TGInitRecType(TGTypedInitRef ti);
@@ -91,6 +94,7 @@ void TGStringArrayFree(const char **str_array);
 void TGRecordValItrFree(TGRecordValItrRef rvi_ref);
 void TGListItrFree(TGListItrRef li_ref);
 void TGDagItrFree(TGDagItrRef di_ref);
+void TGDagPairFree(TGDagPairRef dp_ref);
 
 #ifdef __cplusplus
 }

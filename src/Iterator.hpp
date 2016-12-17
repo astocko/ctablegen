@@ -4,7 +4,6 @@
 #include "TableGen.hpp"
 #include <iostream>
 
-
 namespace ctablegen {
 
 template <class T> class ArrayRefIterator {
@@ -52,6 +51,14 @@ public:
     auto arg = dyn_cast<TypedInit>(dag_->getArg(idx_++));
     if (!arg) return nullptr;
     return arg;
+  }
+
+  DagPair* NextPair() {
+    if (idx_ >= len_) return nullptr;
+    auto name = dag_->getArgName(idx_);
+    auto arg = dyn_cast<TypedInit>(dag_->getArg(idx_++));
+    if (!arg) return nullptr;
+    return new DagPair(name, arg);
   }
 
 private:

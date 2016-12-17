@@ -2,6 +2,7 @@
 #define _CTABLEGEN_TABLEGEN_HPP_
 
 #include <memory>
+#include <utility>
 
 #include <TableGen/TGParser.h>
 #include <llvm/Support/CommandLine.h>
@@ -25,6 +26,7 @@ using namespace llvm;
 namespace ctablegen {
 
 typedef std::map<std::string, std::unique_ptr<Record>> RecordMap;
+typedef std::pair<std::string, TypedInit*> DagPair;
 
 class TableGen {
 public:
@@ -39,17 +41,8 @@ private:
   std::unique_ptr<SourceMgr> source_mgr_;
 };
 
-  // Utility
-  TGRecTyKind TGFromRecType(RecTy *rt);
-
-  // TGRecTyKind TGInitRecType(Init *ti);
-  // TGBool TGBitInitGetValue(Init *ti, int8_t *bit);
-  // int8_t *TGBitsInitGetValue(Init *ti, size_t *len);
-  // TGBool TGIntInitGetValue(Init *ti, int64_t *integer);
-  // char *TGStringInitGetValueNewString(Init *ti);
-  // TGRecordRef TGRecordInitGetValue(Init *ti);
-
-
+// Utility
+TGRecTyKind TGFromRecType(RecTy *rt);
 }
 
 #endif

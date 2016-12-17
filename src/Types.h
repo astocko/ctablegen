@@ -22,6 +22,8 @@ typedef struct TGTypedInit *TGTypedInitRef;
 typedef struct TGListItr *TGListItrRef;
 typedef struct TGDagItr *TGDagItrRef;
 
+typedef struct TGDagPair *TGDagPairRef;
+
 #ifdef __cplusplus
 }
 #endif
