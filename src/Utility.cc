@@ -38,7 +38,7 @@ TGRecTyKind TGFromRecType(RecTy *rt) {
 
 TGRecTyKind TGInitRecType(TGTypedInitRef ti) {
   CHECK_REF(ti, TGInvalidRecTyKind);
-  auto ty = AS_TYPE(Init*, ti);
+  auto ty = AS_TYPE(Init *, ti);
   auto typed_init = dyn_cast<TypedInit>(ty);
   CHECK_REF(typed_init, TGInvalidRecTyKind);
   return ctablegen::TGFromRecType(typed_init->getType());
@@ -46,7 +46,7 @@ TGRecTyKind TGInitRecType(TGTypedInitRef ti) {
 
 TGBool TGBitInitGetValue(TGTypedInitRef ti, int8_t *bit) {
   CHECK_REF(ti, false);
-  auto ty = AS_TYPE(Init*, ti);
+  auto ty = AS_TYPE(Init *, ti);
   auto bit_init = dyn_cast<BitInit>(ty);
   CHECK_REF(bit_init, -1);
   *bit = bit_init->getValue();
@@ -55,7 +55,7 @@ TGBool TGBitInitGetValue(TGTypedInitRef ti, int8_t *bit) {
 
 int8_t *TGBitsInitGetValue(TGTypedInitRef ti, size_t *len) {
   CHECK_REF(ti, nullptr);
-  auto ty = AS_TYPE(Init*, ti);
+  auto ty = AS_TYPE(Init *, ti);
   auto bits_init = dyn_cast<BitsInit>(ty);
   CHECK_REF(bits_init, nullptr);
 
@@ -63,7 +63,7 @@ int8_t *TGBitsInitGetValue(TGTypedInitRef ti, size_t *len) {
   auto bits = new int8_t[*len];
 
   for (size_t i = 0; i < *len; i++) {
-    bits[i] = reinterpret_cast<BitInit*>(bits_init->getBit(i))->getValue();
+    bits[i] = reinterpret_cast<BitInit *>(bits_init->getBit(i))->getValue();
   }
 
   return bits;
@@ -71,7 +71,7 @@ int8_t *TGBitsInitGetValue(TGTypedInitRef ti, size_t *len) {
 
 TGBool TGIntInitGetValue(TGTypedInitRef ti, int64_t *integer) {
   CHECK_REF(ti, false);
-  auto ty = AS_TYPE(Init*, ti);
+  auto ty = AS_TYPE(Init *, ti);
   auto int_init = dyn_cast<IntInit>(ty);
   CHECK_REF(int_init, false);
 
@@ -81,7 +81,7 @@ TGBool TGIntInitGetValue(TGTypedInitRef ti, int64_t *integer) {
 
 char *TGStringInitGetValueNewString(TGTypedInitRef ti) {
   CHECK_REF(ti, nullptr);
-  auto ty = AS_TYPE(Init*, ti);
+  auto ty = AS_TYPE(Init *, ti);
   auto str_init = dyn_cast<StringInit>(ty);
   CHECK_REF(str_init, nullptr);
 
@@ -95,7 +95,7 @@ char *TGStringInitGetValueNewString(TGTypedInitRef ti) {
 
 TGRecordRef TGRecordInitGetValue(TGTypedInitRef ti) {
   CHECK_REF(ti, nullptr);
-  auto ty = AS_TYPE(Init*, ti);
+  auto ty = AS_TYPE(Init *, ti);
   auto def_init = dyn_cast<DefInit>(ty);
   CHECK_REF(def_init, nullptr);
   return AS_TYPE(TGRecordRef, def_init->getDef());

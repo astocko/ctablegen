@@ -7,9 +7,8 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-
-#include "TableGen.hpp"
 #include "Iterator.hpp"
+#include "TableGen.hpp"
 
 using ctablegen::TGFromRecType;
 
@@ -25,15 +24,15 @@ const char *TGRecordGetName(TGRecordRef record_ref) {
   return record->getName().c_str();
 }
 
-const char* TGRecordAsNewString(TGRecordRef record_ref) {
+const char *TGRecordAsNewString(TGRecordRef record_ref) {
   CHECK_REF(record_ref, nullptr);
   auto record = AS_TYPE(Record *, record_ref);
-  auto name =record->getNameInitAsString();
+  auto name = record->getNameInitAsString();
 
   auto sz = name.size() + 1;
   auto str = new char[sz];
   name.copy(str, name.size(), 0);
-  str[sz-1] = '\0';
+  str[sz - 1] = '\0';
   return str;
 }
 
@@ -56,7 +55,7 @@ TGRecTyKind TGRecordGetFieldType(TGRecordRef record_ref, const char *name) {
 
 TGRecordValItrRef TGRecordGetValuesItr(TGRecordRef record_ref) {
   CHECK_REF(record_ref, nullptr);
-  auto record = AS_TYPE(Record*, record_ref);
+  auto record = AS_TYPE(Record *, record_ref);
   auto itr = new ctablegen::ArrayRefIterator<RecordVal>(record->getValues());
   return AS_TYPE(TGRecordValItrRef, itr);
 }

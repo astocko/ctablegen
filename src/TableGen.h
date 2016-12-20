@@ -68,11 +68,14 @@ TGBool TGRecordIsResolveFirst(TGRecordRef record_ref);
 // LLVM RecordVal
 const char *TGRecordValGetName(TGRecordValRef rv_ref);
 TGRecTyKind TGRecordValGetType(TGRecordValRef rv_ref);
+void TGRecordValTest(TGRecordValRef rv_ref);
+
 char *TGRecordValGetValAsNewString(TGRecordValRef rv_ref);
 TGBool TGRecordValGetValAsBit(TGRecordValRef rv_ref, int8_t *bit);
 int8_t *TGRecordValGetValAsBits(TGRecordValRef rv_ref, size_t *len);
 TGBool TGRecordValGetValAsInt(TGRecordValRef rv_ref, int64_t *integer);
 TGRecordRef TGRecordValGetValAsRecord(TGRecordValRef rv_ref);
+TGRecordRef TGRecordValGetValAsDefRecord(TGRecordValRef rv_ref);
 
 // LLVM RecordVal Iterators
 TGRecordValRef TGRecordValItrNext(TGRecordValItrRef rvi_ref);

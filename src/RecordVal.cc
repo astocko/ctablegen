@@ -21,6 +21,24 @@ TGRecTyKind TGRecordValGetType(TGRecordValRef rv_ref) {
   return ctablegen::TGFromRecType(rt);
 }
 
+// TGInitKind TGRecordValGetInitKind(TGRecordValRef rv_ref) {
+//   CHECK_REF(rv_ref, TGInvalidInitKind);
+//   auto rv = AS_TYPE(RecordVal*, rv_ref);
+//   auto val = rv->getValue()->getKind();
+//   return val;
+// }
+
+// void TGRecordValTest(TGRecordValRef rv_ref) {
+//   CHECK_REF(rv_ref, );
+//   auto rv = AS_TYPE(RecordVal*, rv_ref);
+//   auto val = rv->getValue();
+//   auto blah = dyn_cast<DefInit>(val);
+//   auto vals = blah->getDef()->getValues();
+//   for (auto i = vals.begin(); i < vals.end(); i++) {
+//     std::cout << i->getValue()->getAsString() << std::endl;
+//   }
+// }
+
 char* TGRecordValGetValAsNewString(TGRecordValRef rv_ref) {
   CHECK_REF(rv_ref, nullptr);
   auto rv = AS_TYPE(RecordVal*, rv_ref);
@@ -53,9 +71,24 @@ TGBool TGRecordValGetValAsInt(TGRecordValRef rv_ref, int64_t* integer) {
 TGRecordRef TGRecordValGetValAsRecord(TGRecordValRef rv_ref) {
   CHECK_REF(rv_ref, nullptr);
   auto rv = AS_TYPE(RecordVal*, rv_ref);
+
   if (rv->getType()->getRecTyKind() == RecTy::RecordRecTyKind) {
     auto rec = reinterpret_cast<RecordRecTy*>(rv->getType())->getRecord();
     return AS_TYPE(TGRecordRef, rec);
   }
+  return nullptr;
+}
+
+TGRecordRef TGRecordValGetValAsDefRecord(TGRecordValRef rv_ref) {
+  CHECK_REF(rv_ref, nullptr);
+  auto rv = AS_TYPE(RecordVal*, rv_ref);
+
+  if (rv->getType()->getRecTyKind() == RecTy::RecordRecTyKind) {
+    auto val = rv->getValue();
+    auto def = dyn_cast<DefInit>(val);
+    if (!def) return nullptr;
+    return AS_TYPE(TGRecordRef, def->getDef());
+  }
+
   return nullptr;
 }

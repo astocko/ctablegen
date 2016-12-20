@@ -48,19 +48,19 @@ TEST_CASE("Create TableGen", "[create]") {
                  std::back_inserter(includes_cstr),
                  [](const std::string &s) { return s.c_str(); });
 
-  auto tg = TGInitialize(source.c_str(), includes_cstr.size(), &includes_cstr[0]);
+  auto tg =
+      TGInitialize(source.c_str(), includes_cstr.size(), &includes_cstr[0]);
   REQUIRE(tg != nullptr);
   REQUIRE(TGParse(tg));
 
   auto rk = TGGetRecordKeeper(tg);
   auto defs = TGRecordKeeperGetDefs(rk);
 
-
   size_t keys_len = 0;
   auto keys = TGRecordMapGetKeys(defs, &keys_len);
 
   for (size_t i = 0; i < keys_len; i++) {
-    auto record =  TGRecordMapGet(defs, keys[i]);
+    auto record = TGRecordMapGet(defs, keys[i]);
     REQUIRE(!std::string(TGRecordGetName(record)).empty());
     auto itr = TGRecordGetValuesItr(record);
     REQUIRE(itr);
@@ -69,6 +69,8 @@ TEST_CASE("Create TableGen", "[create]") {
     TGListItrRef list_itr;
     TGDagItrRef dag_itr;
     TGTypedInitRef init_ref;
+    TGRecordValRef rv_1;
+    TGRecordValRef rv_2;
 
     int8_t bit;
     int8_t *bits;
@@ -82,11 +84,15 @@ TEST_CASE("Create TableGen", "[create]") {
     while (rv = TGRecordValItrNext(itr)) {
       auto name = TGRecordValGetName(rv);
       auto type = TGRecordValGetType(rv);
+
+      // if (std::string(name) == "ImmT") {
+      //   TGRecordValTest(rv);
+      // }
+
       REQUIRE(name);
       REQUIRE((type >= 0 && type <= 7));
 
-
-      switch(type) {
+      switch (type) {
       case TGInvalidRecTyKind:
         REQUIRE(type != TGInvalidRecTyKind);
         break;
@@ -97,7 +103,8 @@ TEST_CASE("Create TableGen", "[create]") {
         break;
       case TGBitsRecTyKind:
         bits = TGRecordValGetValAsBits(rv, &len);
-        for (size_t i = 0; i < len; i++) REQUIRE((bits[i] == 0 || bits[i] == 1));
+        for (size_t i = 0; i < len; i++)
+          REQUIRE((bits[i] == 0 || bits[i] == 1));
         TGBitArrayFree(bits);
         break;
       case TGCodeRecTyKind:
@@ -116,26 +123,31 @@ TEST_CASE("Create TableGen", "[create]") {
         break;
       case TGListRecTyKind:
         list_itr = TGListRecordGetValues(rv);
-        if (!list_itr) break;
+        if (!list_itr)
+          break;
         while (init_ref = TGListItrNext(list_itr)) {
           if (TGInitRecType(init_ref) == TGRecordRecTyKind) {
-            std::cout << TGRecordGetName(TGRecordInitGetValue(init_ref)) << ", ";
           }
         }
         TGListItrFree(list_itr);
-        std::cout << std::endl << "---------" << std::endl;
+        break;
       case TGDagRecTyKind:
         dag_itr = TGDagRecordGetValues(rv);
-        if (!dag_itr) break;
-        // while (init_ref = TGDagItrNext(dag_itr)) {
-        //   std:: cout << "DAG et: " << TGInitRecType(init_ref) << ", ";
-        //   if (TGInitRecType(init_ref) == TGRecordRecTyKind) {
-        //     std::cout << TGRecordGetName(TGRecordInitGetValue(init_ref)) << " :: ";
-        //   }
-        // }
-        // std::cout << std::endl << "---" << std::endl;
-        if (dag_itr) TGDagItrFree(dag_itr);
+        if (!dag_itr)
+          break;
+        if (dag_itr)
+          TGDagItrFree(dag_itr);
         break;
+      case TGRecordRecTyKind: {
+        // if (std::string(name) != "ImmT") break;
+        // if (auto def = TGRecordValGetValAsDefRecord(rv)) {
+        //   auto name = std::string(TGRecordGetName(def));
+        //   auto vals = TGRecordGetValue(def, "Value");
+        //   std::cout << TGRecordGetName(def) << std::endl;
+        //   std::cout << TGRecordValGetValAsNewString(vals) << std::endl;
+        // }
+        break;
+      }
       default:
         str = TGRecordValGetValAsNewString(rv);
         REQUIRE(str);
