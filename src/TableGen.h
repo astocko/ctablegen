@@ -58,6 +58,7 @@ const char **TGRecordMapGetKeys(TGRecordMapRef rm_ref, size_t *len);
 // LLVM Record
 TGRecordKeeperRef TGRecordGetRecords(TGRecordRef record_ref);
 const char *TGRecordGetName(TGRecordRef record_ref);
+const char *TGRecordAsNewString(TGRecordRef record_ref);
 TGRecordValRef TGRecordGetValue(TGRecordRef record_ref, const char *name);
 TGRecTyKind TGRecordGetFieldType(TGRecordRef record_ref, const char *name);
 TGRecordValItrRef TGRecordGetValuesItr(TGRecordRef record_ref);

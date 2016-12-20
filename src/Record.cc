@@ -25,6 +25,18 @@ const char *TGRecordGetName(TGRecordRef record_ref) {
   return record->getName().c_str();
 }
 
+const char* TGRecordAsNewString(TGRecordRef record_ref) {
+  CHECK_REF(record_ref, nullptr);
+  auto record = AS_TYPE(Record *, record_ref);
+  auto name =record->getNameInitAsString();
+
+  auto sz = name.size() + 1;
+  auto str = new char[sz];
+  name.copy(str, name.size(), 0);
+  str[sz-1] = '\0';
+  return str;
+}
+
 TGRecordValRef TGRecordGetValue(TGRecordRef record_ref, const char *name) {
   CHECK_REF(record_ref, nullptr);
   CHECK_REF(name, nullptr);
